@@ -20,6 +20,9 @@ public class ServoTest extends OpMode {
     private DcMotor motorWheelsRight = null;
     private DcMotor motorWheelsLeft = null;
     
+    private final double servoSpeed = 0.01d;
+    private double servoPos = 1.0d;//0.0 to 1.0 scale, starting servo Position (0.0 in, 1.0 out)
+    
     //---METHODS---//
     
     @Override
@@ -30,8 +33,8 @@ public class ServoTest extends OpMode {
         servoArmsRight = hardwareMap.get(Servo.class, "servo_arms_right");
         servoArmsLeft  = hardwareMap.get(Servo.class, "servo_arms_left");
         
-        //motorWheelsRight = hardwareMap.get(DcMotor.class, "motor_wheels_right");
-        //motorWheelsLeft = hardwareMap.get(DcMotor.class, "motor_wheels_left");
+        motorWheelsRight = hardwareMap.get(DcMotor.class, "motor_wheels_right");
+        motorWheelsLeft = hardwareMap.get(DcMotor.class, "motor_wheels_left");
 
         //---HARDWARE INITIATION---//
         servoArmsLeft.setDirection(Servo.Direction.REVERSE);
@@ -49,6 +52,9 @@ public class ServoTest extends OpMode {
     @Override
     public void init_loop() {}
     @Override
+    /*
+     * Code to run when start is hit
+     */
     public void start() {
         telemetry.addData("Status", "Starting");
         runtime.reset();
@@ -65,36 +71,56 @@ public class ServoTest extends OpMode {
         //TODO: We may need to make a boolean to check if the robot
         //TODO: is currently autonomous.
         //if (!autonomous) {
+        
         moveMotors();
         setArmPosition();
+        
         //}
         
         telemetry.addData("Controller", "LB: " + gamepad1.left_bumper + "; RB:" + gamepad1.right_bumper);
         telemetry.addData("ServoPos", "R: " + servoArmsRight.getPosition() + "; L: " + servoArmsLeft.getPosition()); 
     }
     
-    private void moveMotors() {
-        
+    private void moveMotors() {//Mapped to one stick
+		//Should move foward when stick is forward, back when stick is back
+		//Spot turn left when stick left, spot turn right when stick right
+        double leftPow = gamepad1.right_stick_y - gamepad1.right_stick_x ;
+        double rightPow = gamepad1.right_stick_y + gamepad1.right_stick_x;
+		
+		if(leftPow>1.0){
+			leftPow = 1.0;
+		}else if leftPow<-1.0{
+			leftPow = -1.0;
+		}
+		
+		if(rightPow>1.0){
+			rightPow = 1.0;
+		}else if rightPow<-1.0{
+			rightPow = -1.0;
+		}
+		
+		motorWheelsRight.setPower(rightPow);
+		motorWheelsLeft.setPower(leftPow);
     }
     
-    private final double servoSpeed = 0.1d;
-    private double servoPos = 0;
     private void setArmPosition() {
+        
         if (gamepad1.right_bumper) {
             servoPos += servoSpeed;
-            telemetry.addData("Meep", "RBump");
         }
         if (gamepad1.left_bumper) {
             servoPos += -servoSpeed;
-            telemetry.addData("Meep", "Lump");
         }
         servoArmsLeft.setPosition(servoPos);
         servoArmsRight.setPosition(servoPos);
+        
     }
     
     /*
      * Code to run ONCE after the driver hits STOP
      */
+     
     @Override
-    public void stop() {}
+    public void stop() {
+    }
 }
