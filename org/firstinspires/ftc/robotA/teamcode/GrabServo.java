@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+
+package org.firstinspires.ftc.robotA.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -8,8 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="test_servo", group="Iterative Opmode")
-public class ServoTest extends OpMode {
+@TeleOp(name="grab_servo_A", group="Iterative Opmode")
+public class GrabServo extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     
     //---Equipment (servos, motos, controllers)---//
@@ -82,25 +83,25 @@ public class ServoTest extends OpMode {
     }
     
     private void moveMotors() {//Mapped to one stick
-		//Should move foward when stick is forward, back when stick is back
-		//Spot turn left when stick left, spot turn right when stick right
+        //Should move foward when stick is forward, back when stick is back
+        //Spot turn left when stick left, spot turn right when stick right
         double leftPow = gamepad1.right_stick_y - gamepad1.right_stick_x ;
         double rightPow = gamepad1.right_stick_y + gamepad1.right_stick_x;
-		
-		if(leftPow>1.0){
-			leftPow = 1.0;
-		}else if leftPow<-1.0{
-			leftPow = -1.0;
-		}
-		
-		if(rightPow>1.0){
-			rightPow = 1.0;
-		}else if rightPow<-1.0{
-			rightPow = -1.0;
-		}
-		
-		motorWheelsRight.setPower(rightPow);
-		motorWheelsLeft.setPower(leftPow);
+        
+        if(leftPow>1.0){
+            leftPow = 1.0;
+        }else if(leftPow<-1.0){
+            leftPow = -1.0;
+        }
+        
+        if(rightPow>1.0){
+            rightPow = 1.0;
+        }else if(rightPow<-1.0){
+            rightPow = -1.0;
+        }
+        
+        motorWheelsRight.setPower(rightPow);
+        motorWheelsLeft.setPower(leftPow);
     }
     
     private void setArmPosition() {
